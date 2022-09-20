@@ -29,6 +29,7 @@ with open("CSV /Package.csv") as csvPackageFile:
 
 
 # Create package objects from the Package.csv file & load packages into hash table
+# Space-time complexity: O(N)
 def load_packages(filename, package_hash):
     with open(filename) as package_content:
         package_data = csv.reader(package_content)
@@ -60,17 +61,19 @@ truck_1 = Truck.Truck(None, [1, 7, 13, 14, 15, 16, 19, 20, 21, 24, 27, 29, 34, 3
 
 # Create truck 2 object - Start 8, Packages - 3, 18, 36, 38 must be on truck 2
 # truck 2 - 10 packages
-truck_2 = Truck.Truck(None, [3, 5, 11, 12, 17, 18, 23, 36, 37, 38], 16, "4001 South 700 East",
-                      18, 0.0, datetime.timedelta(hours=8))
+# V2 - move packages 6, 30, 31, 40 from truck 3 to truck 2 and depart truck 2 at 9:05 for package deadlines
+truck_2 = Truck.Truck(None, [3, 5, 11, 12, 17, 18, 23, 36, 37, 38, 6, 30, 31, 40], 16, "4001 South 700 East",
+                      18, 0.0, datetime.timedelta(hours=9, minutes=5))
 
 # Create truck 3 object - Start at 10:20 when address corrected for package 9
 # Packages - 6, 25, 28, 32 delayed until 9:05 AM
 # truck 3 - 15 packages
-truck_3 = Truck.Truck(None, [2, 4, 6, 8, 9, 10, 22, 25, 26, 28, 30, 31, 32, 33, 40], 16, "4001 South 700 East",
+truck_3 = Truck.Truck(None, [2, 4, 8, 9, 10, 22, 25, 26, 28, 32, 33], 16, "4001 South 700 East",
                       18, 0.0, datetime.timedelta(hours=10, minutes=20))
 
 
 # Method used to get the address
+# Space-time complexity: O(N)
 def get_address(address):
     for row in CSV_Address:
         if address in row[2]:
@@ -78,6 +81,7 @@ def get_address(address):
 
 
 # Method used to find distance between two addresses
+# Space-time complexity: O(1)
 def get_distance_between(x_value, y_value):
     distance = CSV_Distance[x_value][y_value]
     if distance == '':
@@ -87,6 +91,7 @@ def get_distance_between(x_value, y_value):
 
 
 # Method for ordering the packages onto the truck using the nearest neighbor algorithm
+# Space-time complexity: O(N^2)
 def deliver_packages(truck):
     # Create array of undelivered packages
     needs_delivered = []
